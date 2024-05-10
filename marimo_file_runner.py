@@ -27,7 +27,16 @@ if __name__ == '__main__':
   if not os.path.exists(notebook_script_venv):
     subprocess.run([
       sys.executable, '-m', 'venv', notebook_script_venv
-    ])
+    ], check=True)
+
+  if 'PYTHONHOME' in os.environ:
+    os.environ.pop('PYTHONHOME')
+
+  os.environ['PATH'] = os.path.join(notebook_script_venv, 'bin')+os.pathsep+os.environ.get('PATH', '')
+  os.environ['VIRTUAL_ENV'] = notebook_script_venv
+  os.environ['VIRTUAL_ENV_PROMPT'] = f'({os.path.basename(notebook_script_file)}) '
+
+  os.environ['PYTHONUSERBASE'] = notebook_script_venv
 
   subprocess.run([
     os.path.join(notebook_script_venv, 'bin', 'python'), '-m', 'marimo', 'edit', notebook_script_file
