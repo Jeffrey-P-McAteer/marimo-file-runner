@@ -6,22 +6,22 @@ app = marimo.App(width="full", app_title="Some Project of Mine")
 
 @app.cell
 def __():
-    import json
-    import requests
-    import pandas
-    return json, pandas, requests
+    import pyomo
+    return pyomo,
 
 
 @app.cell
-def __(pandas):
-    d = pandas.DataFrame([1, 2, 3, 4])
-    return d,
+def __():
+    import pyomo.environ as pyo
 
+    model = pyo.ConcreteModel()
 
-@app.cell
-def __(d):
-    d
-    return
+    model.x = pyo.Var([1, 2], domain=pyo.NonNegativeReals)
+
+    model.OBJ = pyo.Objective(expr=2 * model.x[1] + 3 * model.x[2])
+
+    model.Constraint1 = pyo.Constraint(expr=3 * model.x[1] + 4 * model.x[2] >= 1)
+    return model, pyo
 
 
 @app.cell
